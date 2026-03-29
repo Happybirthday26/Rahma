@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مفاجأة رحمة - السفر عبر الزمن</title>
+    <title>مفاجأة رحمة</title>
     <style>
-        /* إعدادات عامة */
         body {
             margin: 0; padding: 0; min-height: 100vh;
             display: flex; justify-content: center; align-items: center;
@@ -14,161 +13,94 @@
             transition: background 1s ease;
         }
 
-        /* خلفية آلة الزمن (المرحلة الأولى) */
-        .time-travel-bg {
-            background: radial-gradient(circle, #1a1a2e 0%, #0f0c29 100%);
-            color: white;
-        }
-
-        /* خلفية الاحتفال (المرحلة التانية) */
-        .celebration-bg {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
-            color: #333;
-        }
+        .time-travel-bg { background: radial-gradient(circle, #1a1a2e 0%, #0f0c29 100%); color: white; }
+        .celebration-bg { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); color: #333; }
 
         .container {
-            text-align: center;
-            border-radius: 20px;
-            padding: 30px;
-            width: 90%; max-width: 400px;
-            position: relative; z-index: 10;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            text-align: center; border-radius: 20px; padding: 20px;
+            width: 90%; max-width: 400px; position: relative; z-index: 10;
         }
 
-        /* --- تصميم لوحة آلة الزمن --- */
-        #step1 {
-            background: #222;
-            border: 4px solid #444;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: inset 0 0 20px #000;
-        }
-        
-        .machine-title { color: #00ffcc; text-shadow: 0 0 10px #00ffcc; font-size: 1.8rem; margin-top: 0; }
-        
-        /* الشاشة الديجيتال */
+        /* المرحلة 1: آلة الزمن */
+        #step1 { background: #222; border: 4px solid #444; border-radius: 15px; padding: 20px; box-shadow: inset 0 0 20px #000; }
+        .machine-title { color: #00ffcc; text-shadow: 0 0 10px #00ffcc; font-size: 1.8rem; margin: 0; }
         .digital-display {
-            background: #000;
-            color: #ff0055;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 2.5rem;
-            font-weight: bold;
-            padding: 15px;
-            border-radius: 10px;
-            border: 2px solid #333;
-            margin: 20px 0;
-            text-shadow: 0 0 15px #ff0055;
-            box-shadow: inset 0 0 15px rgba(255, 0, 85, 0.3);
+            background: #000; color: #ff0055; font-family: monospace; font-size: 2.5rem;
+            padding: 15px; border-radius: 10px; margin: 20px 0; text-shadow: 0 0 15px #ff0055;
         }
+        input[type=range] { -webkit-appearance: none; width: 100%; background: #444; height: 15px; border-radius: 10px; outline: none; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 35px; width: 35px; background: #00ffcc; border-radius: 50%; cursor: pointer; border: 3px solid #fff; box-shadow: 0 0 10px #00ffcc; }
 
-        /* ذراع آلة الزمن (Slider) */
-        .slider-container { margin-top: 30px; }
-        .slider-label { color: #aaa; font-size: 1rem; margin-bottom: 10px; display: block; }
+        /* المرحلة 2: كارت الاحتفال */
+        #step2 { display: none; background: rgba(255, 255, 255, 0.95); padding: 15px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .celeb-title { color: #ff4757; font-size: 1.8rem; margin-bottom: 5px; }
         
-        input[type=range] {
-            -webkit-appearance: none; width: 100%; background: transparent;
-        }
-        input[type=range]:focus { outline: none; }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%; height: 15px; cursor: pointer;
-            background: #444; border-radius: 10px;
-            box-shadow: inset 0 0 5px #000;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            height: 40px; width: 40px; border-radius: 50%;
-            background: #00ffcc; cursor: pointer;
-            -webkit-appearance: none; margin-top: -12px;
-            box-shadow: 0 0 15px #00ffcc;
-            border: 3px solid #fff;
-        }
-
-        /* --- تأثير الفلاش للسفر عبر الزمن --- */
-        #timeFlash {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: white; z-index: 9999;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.5s ease;
-        }
-
-        /* --- تصميم كارت الخدش (المرحلة التانية) --- */
-        #step2 { display: none; background: rgba(255, 255, 255, 0.95); padding: 20px; border-radius: 20px; }
-        
-        .celeb-title { color: #ff4757; font-size: 2rem; margin-bottom: 10px; }
-        .celeb-subtitle { color: #555; font-size: 1.1rem; margin-bottom: 20px; }
-
+        /* كونتينر الكارت اللي فيه السكرول */
         #scratchContainer {
-            position: relative; width: 100%; height: 350px;
-            background: #fff; border-radius: 15px; overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border: 2px dashed #ff9a9e;
+            position: relative; width: 100%; height: 400px;
+            background: #fff; border-radius: 15px; border: 2px dashed #ff9a9e;
+            overflow: hidden; /* هنغيرها لـ auto بالـ JS */
         }
 
+        /* الرسالة نفسها */
         .message-content {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            padding: 20px; box-sizing: border-box; z-index: 1;
+            padding: 20px; text-align: center;
+            height: 100%; box-sizing: border-box;
+            display: flex; flex-direction: column; align-items: center;
         }
-        .message-content h2 { color: #ff4757; font-size: 1.8rem; margin: 0 0 15px 0; }
-        .message-content p { color: #2f3542; font-size: 1.2rem; line-height: 1.6; font-weight: bold; margin: 0; }
+        
+        /* ضبط الـ Scroll للرسالة */
+        .scrollable-text {
+            overflow-y: auto; width: 100%; height: 100%;
+            padding: 10px;
+        }
 
-        canvas { position: absolute; top: 0; left: 0; z-index: 2; cursor: pointer; }
+        .message-content h2 { color: #ff4757; font-size: 1.6rem; margin-bottom: 15px; }
+        .message-content p { color: #2f3542; font-size: 1.15rem; line-height: 1.7; font-weight: bold; }
 
-        /* البالونات */
-        .balloon {
-            position: absolute; bottom: -100px; width: 45px; height: 60px;
-            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
-            animation: floatUp linear infinite; z-index: 100; opacity: 0.9;
-            box-shadow: inset -5px -5px 15px rgba(0,0,0,0.2);
-        }
-        .balloon::after {
-            content: ''; position: absolute; bottom: -20px; left: 50%;
-            width: 2px; height: 20px; background-color: rgba(0,0,0,0.3);
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); }
-            100% { transform: translateY(-120vh) rotate(20deg); }
-        }
+        /* طبقة الخدش */
+        canvas { position: absolute; top: 0; left: 0; z-index: 5; cursor: pointer; touch-action: none; }
+
+        #timeFlash { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.5s; }
+
+        .balloon { position: absolute; bottom: -100px; width: 40px; height: 50px; border-radius: 50%; animation: floatUp linear infinite; z-index: 100; opacity: 0.8; }
+        @keyframes floatUp { 0% { transform: translateY(0); } 100% { transform: translateY(-120vh); } }
     </style>
 </head>
 <body class="time-travel-bg" id="bodyEl">
 
     <div id="timeFlash"></div>
 
-    <div class="container" id="mainContainer">
-        
+    <div class="container">
         <div id="step1">
             <h2 class="machine-title">آلة الزمن ⏳</h2>
-            <p style="color: #ccc; font-size: 0.9rem;">إحنا متأخرين يومين.. خلينا نرجع بالزمن!</p>
-            
             <div class="digital-display" id="dateDisplay">29 مارس</div>
-            
-            <div class="slider-container">
-                <span class="slider-label">اسحبي الذراع للشمال عشان نرجع لورا ⏪</span>
-                <input type="range" min="27" max="29" value="29" id="timeSlider" step="0.1">
-            </div>
+            <input type="range" min="27" max="29" value="29" id="timeSlider" step="0.1">
+            <p style="color:#aaa; margin-top:15px;">اسحبي الذراع لليوم اللي فاتك!</p>
         </div>
 
         <div id="step2">
             <h2 class="celeb-title">وصلنا بالسلامة! 🚀</h2>
-            <p class="celeb-subtitle">امسحي الشاشة بصباعك عشان تشوفي المفاجأة</p>
+            <p style="margin-bottom:10px;">امسحي الشاشة بصباعك للمفاجأة</p>
             
             <div id="scratchContainer">
-                <div class="message-content">
-                    <h2>كل سنة وأنتي طيبة يا رخمه! 🎉</h2>
-                    <p>
-                        يمكن اتأخرت يومين، بس أمنياتي ليكي بالسعادة ملهاش وقت.<br><br>
-                        شكراً إنك دايماً الصديقة اللي برتاح أفضفض معاها، واللي بحب أرخم عليها كمان! 😂<br><br>
-                        Happy Birthday Rahma! 🎂
-                    </p>
-                </div>
                 <canvas id="scratchCanvas"></canvas>
+                <div class="message-content">
+                    <div class="scrollable-text">
+                        <h2>كل سنة وأنتي طيبة <br> يا رحمة يا رخمة! 😂 🎉</h2>
+                        <p>
+                            يمكن اتأخرت يومين، بس أمنياتي ليكي بالسعادة ملهاش وقت.<br><br>
+                            شكراً إنك دايماً الصديقة اللي برتاح أفضفض معاها، واللي بحب أرخم عليها كمان!<br><br>
+                            يا رب تكون سنة سعيدة عليكي وتحققي كل اللي بتتمنيه، وتفضلي دايماً مصدر بهجة للي حوليكي (رغم رخامتك طبعاً).<br><br>
+                            Happy Birthday Rahma! 🎂🎈✨
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 
     <script>
-        // --- منطق آلة الزمن (تغيير التاريخ) ---
         const slider = document.getElementById('timeSlider');
         const dateDisplay = document.getElementById('dateDisplay');
         const step1 = document.getElementById('step1');
@@ -178,136 +110,84 @@
         let timeTraveled = false;
 
         slider.addEventListener('input', function() {
-            if (timeTraveled) return; // لو سافرنا خلاص مانعملش حاجة
-            
+            if (timeTraveled) return;
             let val = parseFloat(this.value);
-            
-            // تغيير الرقم في الشاشة الديجيتال
-            if (val > 28) {
-                dateDisplay.innerText = "29 مارس";
-                dateDisplay.style.color = "#ff0055"; // أحمر
-                dateDisplay.style.textShadow = "0 0 15px #ff0055";
-            } else if (val > 27.2) {
-                dateDisplay.innerText = "28 مارس";
-                dateDisplay.style.color = "#ffaa00"; // برتقالي
-                dateDisplay.style.textShadow = "0 0 15px #ffaa00";
-            } else {
-                dateDisplay.innerText = "27 مارس!";
-                dateDisplay.style.color = "#00ffcc"; // أخضر/سيان
-                dateDisplay.style.textShadow = "0 0 20px #00ffcc";
-                
-                // تفعيل السفر عبر الزمن
+            if (val > 28) { dateDisplay.innerText = "29 مارس"; dateDisplay.style.color = "#ff0055"; }
+            else if (val > 27.2) { dateDisplay.innerText = "28 مارس"; dateDisplay.style.color = "#ffaa00"; }
+            else {
+                dateDisplay.innerText = "27 مارس!"; dateDisplay.style.color = "#00ffcc";
                 timeTraveled = true;
-                slider.disabled = true; // نوقف الذراع
-                
-                setTimeout(triggerTimeTravel, 500); // نستنى نص ثانية وبعدين نسافر
+                setTimeout(() => {
+                    timeFlash.style.opacity = '1';
+                    setTimeout(() => {
+                        step1.style.display = 'none';
+                        step2.style.display = 'block';
+                        bodyEl.className = 'celebration-bg';
+                        initScratchCard();
+                        timeFlash.style.opacity = '0';
+                    }, 600);
+                }, 400);
             }
         });
-
-        // --- الانتقال للمرحلة التانية ---
-        function triggerTimeTravel() {
-            // 1. فلاش أبيض ساطع
-            timeFlash.style.opacity = '1';
-            
-            setTimeout(() => {
-                // 2. نخفي آلة الزمن ونظهر الاحتفال أثناء الفلاش
-                step1.style.display = 'none';
-                step2.style.display = 'block';
-                bodyEl.className = 'celebration-bg'; // تغيير الخلفية
-                
-                initScratchCard(); // تجهيز الكارت
-                
-                // 3. نقفل الفلاش
-                timeFlash.style.opacity = '0';
-            }, 800);
-        }
-
-        // --- منطق كارت الخدش ---
-        let balloonsTriggered = false;
 
         function initScratchCard() {
             const container = document.getElementById('scratchContainer');
             const canvas = document.getElementById('scratchCanvas');
             const ctx = canvas.getContext('2d');
-            
-            // نظبط مقاس الكانفاس على قد الكونتينر بالظبط
             canvas.width = container.offsetWidth;
             canvas.height = container.offsetHeight;
-            
-            // شكل الكارت من بره (لون فضي لامع زي كروت الشحن)
-            let gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            gradient.addColorStop(0, "#dcdde1");
-            gradient.addColorStop(0.5, "#f5f6fa");
-            gradient.addColorStop(1, "#7f8fa6");
-            
-            ctx.fillStyle = gradient;
+
+            ctx.fillStyle = '#b2bec3';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // إضافة نقوش أو نص على الكارت
-            ctx.fillStyle = '#2f3640';
-            ctx.font = 'bold 22px "Segoe UI", Tahoma';
+            ctx.fillStyle = '#636e72';
+            ctx.font = 'bold 20px Tahoma';
             ctx.textAlign = 'center';
-            ctx.fillText('🎁 امسحي هنا بصباعك 🎁', canvas.width / 2, canvas.height / 2);
-            ctx.font = '16px "Segoe UI", Tahoma';
-            ctx.fillText('(المفاجأة تحت اللون الفضي)', canvas.width / 2, canvas.height / 2 + 30);
+            ctx.fillText('🎁 امسحي هنا بصباعك 🎁', canvas.width/2, canvas.height/2);
 
-            let isDrawing = false;
+            let scratchedPixels = 0;
+            const totalPixels = canvas.width * canvas.height;
 
-            // دالة المسح
             function scratch(x, y) {
                 ctx.globalCompositeOperation = 'destination-out';
                 ctx.beginPath();
-                ctx.arc(x, y, 30, 0, Math.PI * 2); // حجم صباع المسح
+                ctx.arc(x, y, 35, 0, Math.PI * 2);
                 ctx.fill();
-
-                // لو دي أول مرة تمسح، نطلع البالونات
-                if(!balloonsTriggered) {
-                    createBalloons();
-                    balloonsTriggered = true;
+                
+                if(!window.balloonsStarted) { createBalloons(); window.balloonsStarted = true; }
+                
+                // حساب نسبة المسح - لو مسحت كتير نخفي الكانفاس عشان تعرف تسكرول
+                scratchedPixels++;
+                if(scratchedPixels > 150) { // بعد شوية مسح بسيطة
+                   canvas.style.pointerEvents = 'none'; // يسمح بلمس الكلام اللي تحته
+                   canvas.style.transition = 'opacity 1s';
+                   canvas.style.opacity = '0';
+                   setTimeout(() => canvas.remove(), 1000);
                 }
             }
 
-            // أحداث الماوس (للكمبيوتر)
-            canvas.addEventListener('mousedown', (e) => { isDrawing = true; scratch(e.offsetX, e.offsetY); });
-            canvas.addEventListener('mousemove', (e) => { if (isDrawing) scratch(e.offsetX, e.offsetY); });
-            canvas.addEventListener('mouseup', () => { isDrawing = false; });
-            canvas.addEventListener('mouseleave', () => { isDrawing = false; });
-
-            // أحداث اللمس (للموبايل)
             canvas.addEventListener('touchstart', (e) => {
-                isDrawing = true;
-                e.preventDefault(); 
                 let rect = canvas.getBoundingClientRect();
                 scratch(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
-            }, {passive: false});
-
+            });
             canvas.addEventListener('touchmove', (e) => {
-                if (isDrawing) {
-                    e.preventDefault();
-                    let rect = canvas.getBoundingClientRect();
-                    scratch(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
-                }
-            }, {passive: false});
-
-            canvas.addEventListener('touchend', () => { isDrawing = false; });
+                e.preventDefault();
+                let rect = canvas.getBoundingClientRect();
+                scratch(e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top);
+            });
         }
 
-        // --- منطق البالونات ---
         function createBalloons() {
-            const colors = ['#ff6b81', '#1e90ff', '#2ed573', '#ffa502', '#9b59b6', '#eccc68'];
-            for(let i = 0; i < 30; i++) { // 30 بالونة
+            const colors = ['#ff6b81', '#1e90ff', '#2ed573', '#ffa502', '#9b59b6'];
+            for(let i = 0; i < 25; i++) {
                 setTimeout(() => {
-                    const balloon = document.createElement('div');
-                    balloon.classList.add('balloon');
-                    balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                    balloon.style.left = Math.random() * 90 + 'vw'; // تتوزع على الشاشة
-                    balloon.style.animationDuration = (Math.random() * 3 + 3) + 's'; // سرعات مختلفة
-                    
-                    document.body.appendChild(balloon);
-                    
-                    // مسح البالونة بعد ما تطلع بره عشان الموبايل مايهنجش
-                    setTimeout(() => balloon.remove(), 6000);
-                }, i * 150); // تطلع ورا بعض مش في نفس اللحظة
+                    const b = document.createElement('div');
+                    b.classList.add('balloon');
+                    b.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+                    b.style.left = Math.random()*90 + 'vw';
+                    b.style.animationDuration = (Math.random()*3 + 3) + 's';
+                    document.body.appendChild(b);
+                    setTimeout(() => b.remove(), 5000);
+                }, i * 200);
             }
         }
     </script>
