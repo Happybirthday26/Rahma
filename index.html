@@ -3,66 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مفاجأة رحمة</title>
+    <title>عيد ميلاد رحمة</title>
     <style>
         body {
             margin: 0; padding: 0; min-height: 100vh;
             display: flex; justify-content: center; align-items: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
-            transition: background 1s ease;
+            overflow: hidden; transition: background 1s ease;
         }
 
         .time-travel-bg { background: radial-gradient(circle, #1a1a2e 0%, #0f0c29 100%); color: white; }
         .celebration-bg { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); color: #333; }
 
-        .container {
-            text-align: center; border-radius: 20px; padding: 20px;
-            width: 90%; max-width: 400px; position: relative; z-index: 10;
-        }
+        .container { text-align: center; width: 90%; max-width: 400px; z-index: 10; }
 
         /* المرحلة 1: آلة الزمن */
         #step1 { background: #222; border: 4px solid #444; border-radius: 15px; padding: 20px; box-shadow: inset 0 0 20px #000; }
-        .machine-title { color: #00ffcc; text-shadow: 0 0 10px #00ffcc; font-size: 1.8rem; margin: 0; }
-        .digital-display {
-            background: #000; color: #ff0055; font-family: monospace; font-size: 2.5rem;
-            padding: 15px; border-radius: 10px; margin: 20px 0; text-shadow: 0 0 15px #ff0055;
-        }
-        input[type=range] { -webkit-appearance: none; width: 100%; background: #444; height: 15px; border-radius: 10px; outline: none; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 35px; width: 35px; background: #00ffcc; border-radius: 50%; cursor: pointer; border: 3px solid #fff; box-shadow: 0 0 10px #00ffcc; }
+        .digital-display { background: #000; color: #ff0055; font-family: monospace; font-size: 2.5rem; padding: 15px; border-radius: 10px; margin: 20px 0; }
+        input[type=range] { -webkit-appearance: none; width: 100%; height: 15px; background: #444; border-radius: 10px; outline: none; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 35px; width: 35px; background: #00ffcc; border-radius: 50%; border: 3px solid #fff; }
 
-        /* المرحلة 2: كارت الاحتفال */
-        #step2 { display: none; background: rgba(255, 255, 255, 0.95); padding: 15px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .celeb-title { color: #ff4757; font-size: 1.8rem; margin-bottom: 5px; }
+        /* المرحلة 2: الكارت */
+        #step2 { display: none; background: rgba(255, 255, 255, 0.95); padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         
-        /* كونتينر الكارت اللي فيه السكرول */
         #scratchContainer {
             position: relative; width: 100%; height: 400px;
             background: #fff; border-radius: 15px; border: 2px dashed #ff9a9e;
-            overflow: hidden; /* هنغيرها لـ auto بالـ JS */
+            overflow-y: auto; /* السماح بالسكرول */
+            -webkit-overflow-scrolling: touch;
         }
 
-        /* الرسالة نفسها */
-        .message-content {
-            padding: 20px; text-align: center;
-            height: 100%; box-sizing: border-box;
-            display: flex; flex-direction: column; align-items: center;
-        }
-        
-        /* ضبط الـ Scroll للرسالة */
-        .scrollable-text {
-            overflow-y: auto; width: 100%; height: 100%;
-            padding: 10px;
-        }
+        .message-content { padding: 20px; text-align: center; }
+        .message-content h2 { color: #ff4757; font-size: 1.6rem; margin-top: 0; margin-bottom: 15px; }
+        .message-content p { color: #2f3542; font-size: 1.2rem; line-height: 1.8; font-weight: bold; margin: 0; }
 
-        .message-content h2 { color: #ff4757; font-size: 1.6rem; margin-bottom: 15px; }
-        .message-content p { color: #2f3542; font-size: 1.15rem; line-height: 1.7; font-weight: bold; }
-
-        /* طبقة الخدش */
-        canvas { position: absolute; top: 0; left: 0; z-index: 5; cursor: pointer; touch-action: none; }
+        /* طبقة الخدش - بتبقي فوق بس في الأول */
+        canvas { position: absolute; top: 0; left: 0; z-index: 5; touch-action: none; border-radius: 15px; }
 
         #timeFlash { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.5s; }
-
         .balloon { position: absolute; bottom: -100px; width: 40px; height: 50px; border-radius: 50%; animation: floatUp linear infinite; z-index: 100; opacity: 0.8; }
         @keyframes floatUp { 0% { transform: translateY(0); } 100% { transform: translateY(-120vh); } }
     </style>
@@ -73,28 +51,26 @@
 
     <div class="container">
         <div id="step1">
-            <h2 class="machine-title">آلة الزمن ⏳</h2>
+            <h2 style="color: #00ffcc;">آلة الزمن ⏳</h2>
             <div class="digital-display" id="dateDisplay">29 مارس</div>
             <input type="range" min="27" max="29" value="29" id="timeSlider" step="0.1">
-            <p style="color:#aaa; margin-top:15px;">اسحبي الذراع لليوم اللي فاتك!</p>
+            <p style="color:#aaa;">ارجعي بالزمن ليوم عيد ميلادك!</p>
         </div>
 
         <div id="step2">
-            <h2 class="celeb-title">وصلنا بالسلامة! 🚀</h2>
-            <p style="margin-bottom:10px;">امسحي الشاشة بصباعك للمفاجأة</p>
-            
+            <h2 style="color:#ff4757; margin-bottom:10px;">وصلنا بالسلامة! 🚀</h2>
             <div id="scratchContainer">
                 <canvas id="scratchCanvas"></canvas>
-                <div class="message-content">
-                    <div class="scrollable-text">
-                        <h2>كل سنة وأنتي طيبة <br> يا رحمة يا رخمة! 😂 🎉</h2>
-                        <p>
-                            يمكن اتأخرت يومين، بس أمنياتي ليكي بالسعادة ملهاش وقت.<br><br>
-                            شكراً إنك دايماً الصديقة اللي برتاح أفضفض معاها، واللي بحب أرخم عليها كمان!<br><br>
-                            يا رب تكون سنة سعيدة عليكي وتحققي كل اللي بتتمنيه، وتفضلي دايماً مصدر بهجة للي حوليكي (رغم رخامتك طبعاً).<br><br>
-                            Happy Birthday Rahma! 🎂🎈✨
-                        </p>
-                    </div>
+                
+                <div class="message-content" id="finalMessage">
+                    <h2>كل سنة وأنتي طيبة <br> يا رحمة الرخمة! 😂 🎉</h2>
+                    <p>
+                        يمكن اتأخرت يومين، بس أمنياتي ليكي بالسعادة ملهاش وقت.<br><br>
+                        شكراً إنك دايماً الصديقة اللي برتاح أفضفض معاها، واللي بحب أرخم عليها كمان!<br><br>
+                        يا رب تكون سنة سعيدة عليكي وتحققي كل اللي بتتمنيه، وتفضلي دايماً مصدر بهجة للي حوليكي (رغم رخامتك طبعاً).<br><br>
+                        كل سنة وأنتي معانا ومنورة حياتنا يا أجدع رخمة في المجرة!<br><br>
+                        Happy Birthday Rahma! 🎂🎈✨
+                    </p>
                 </div>
             </div>
         </div>
@@ -107,16 +83,13 @@
         const step2 = document.getElementById('step2');
         const bodyEl = document.getElementById('bodyEl');
         const timeFlash = document.getElementById('timeFlash');
-        let timeTraveled = false;
 
         slider.addEventListener('input', function() {
-            if (timeTraveled) return;
             let val = parseFloat(this.value);
-            if (val > 28) { dateDisplay.innerText = "29 مارس"; dateDisplay.style.color = "#ff0055"; }
-            else if (val > 27.2) { dateDisplay.innerText = "28 مارس"; dateDisplay.style.color = "#ffaa00"; }
+            if (val > 28) { dateDisplay.innerText = "29 مارس"; }
+            else if (val > 27.2) { dateDisplay.innerText = "28 مارس"; }
             else {
-                dateDisplay.innerText = "27 مارس!"; dateDisplay.style.color = "#00ffcc";
-                timeTraveled = true;
+                dateDisplay.innerText = "27 مارس!";
                 setTimeout(() => {
                     timeFlash.style.opacity = '1';
                     setTimeout(() => {
@@ -126,7 +99,7 @@
                         initScratchCard();
                         timeFlash.style.opacity = '0';
                     }, 600);
-                }, 400);
+                }, 300);
             }
         });
 
@@ -139,13 +112,12 @@
 
             ctx.fillStyle = '#b2bec3';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#636e72';
-            ctx.font = 'bold 20px Tahoma';
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 20px Segoe UI';
             ctx.textAlign = 'center';
             ctx.fillText('🎁 امسحي هنا بصباعك 🎁', canvas.width/2, canvas.height/2);
 
-            let scratchedPixels = 0;
-            const totalPixels = canvas.width * canvas.height;
+            let pointsScratched = 0;
 
             function scratch(x, y) {
                 ctx.globalCompositeOperation = 'destination-out';
@@ -153,15 +125,16 @@
                 ctx.arc(x, y, 35, 0, Math.PI * 2);
                 ctx.fill();
                 
+                pointsScratched++;
                 if(!window.balloonsStarted) { createBalloons(); window.balloonsStarted = true; }
-                
-                // حساب نسبة المسح - لو مسحت كتير نخفي الكانفاس عشان تعرف تسكرول
-                scratchedPixels++;
-                if(scratchedPixels > 150) { // بعد شوية مسح بسيطة
-                   canvas.style.pointerEvents = 'none'; // يسمح بلمس الكلام اللي تحته
-                   canvas.style.transition = 'opacity 1s';
-                   canvas.style.opacity = '0';
-                   setTimeout(() => canvas.remove(), 1000);
+
+                // السر هنا: بعد ما تمسح جزء بسيط، بنشيل الكانفاس عشان تقدر تسكرول الكلام
+                if(pointsScratched > 50) {
+                    canvas.style.transition = 'opacity 0.8s';
+                    canvas.style.opacity = '0';
+                    setTimeout(() => {
+                        canvas.style.display = 'none'; // اختفاء كامل عشان يفتح السكرول
+                    }, 800);
                 }
             }
 
@@ -178,7 +151,7 @@
 
         function createBalloons() {
             const colors = ['#ff6b81', '#1e90ff', '#2ed573', '#ffa502', '#9b59b6'];
-            for(let i = 0; i < 25; i++) {
+            for(let i = 0; i < 20; i++) {
                 setTimeout(() => {
                     const b = document.createElement('div');
                     b.classList.add('balloon');
@@ -186,7 +159,6 @@
                     b.style.left = Math.random()*90 + 'vw';
                     b.style.animationDuration = (Math.random()*3 + 3) + 's';
                     document.body.appendChild(b);
-                    setTimeout(() => b.remove(), 5000);
                 }, i * 200);
             }
         }
